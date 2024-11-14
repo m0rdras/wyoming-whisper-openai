@@ -8,8 +8,8 @@ COPY rootfs /
 WORKDIR /usr/src/app
 
 # Copy Python package files
-COPY ../wyoming_whisper_openai_client ./wyoming_whisper_openai_client
-COPY ../pyproject.toml ../poetry.lock ../README.md ./
+COPY pyproject.toml poetry.lock README.md ./
+COPY wyoming_whisper_openai_client ./wyoming_whisper_openai_client
 
 # Install dependencies
 RUN \
