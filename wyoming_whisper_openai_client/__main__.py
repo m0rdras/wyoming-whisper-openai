@@ -35,6 +35,12 @@ async def main() -> None:
         required=True,
         help="OpenAI API key for Whisper transcription"
     )
+    parser.add_argument(
+        "--language",
+        help="Language code for Whisper transcription (e.g., en, fr, de). Leave empty for auto-detection",
+        choices=WHISPER_LANGUAGES + [""],
+        default=""
+    )
     args = parser.parse_args()
 
     logging.basicConfig(

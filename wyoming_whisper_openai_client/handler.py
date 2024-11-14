@@ -68,6 +68,8 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                             "model": "whisper-1",
                             "response_format": "json"
                         }
+                        if self.cli_args.language:
+                            data["language"] = self.cli_args.language
                         
                         r = await client.post(
                             "https://api.openai.com/v1/audio/transcriptions",

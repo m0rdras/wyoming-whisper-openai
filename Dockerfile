@@ -12,6 +12,7 @@ ADD run.sh ./
 RUN chmod +x run.sh
 
 ENV OPENAI_API_KEY=""
+ENV WHISPER_LANGUAGE=""
 EXPOSE 7891
 
 ENTRYPOINT ["bash", "/wyoming-whisper-api-client/run.sh"]
