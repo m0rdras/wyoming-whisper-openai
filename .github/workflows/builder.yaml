@@ -1,9 +1,5 @@
 name: Builder
 
-env:
-  BUILD_ARGS: "--all"
-  MONITORED_FILES: "addon/Dockerfile addon/build.yaml addon/config.yaml addon/rootfs/"
-
 on:
   push:
     branches:
@@ -36,8 +32,9 @@ jobs:
         uses: home-assistant/builder@master
         with:
           args: |
-            --all \
-            --target /addon \
+            --amd64 \
+            --aarch64 \
+            --target addon \
             --docker-hub ghcr.io/m0rdras \
             --image wyoming-whisper-openai-addon \
             --version 1.0.0

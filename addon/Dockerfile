@@ -1,28 +1,34 @@
 ARG BUILD_FROM
-FROM $BUILD_FROM
-
-# Add S6 overlay
-WORKDIR /usr/src
-
-# Install required packages
-RUN \
-    apk add --no-cache \
-        python3 \
-        py3-pip \
-        git
+FROM ${BUILD_FROM}
 
 # Copy local files
 COPY rootfs /
 
-# Install the package
-WORKDIR /usr/src
-COPY . .
-RUN pip3 install --no-cache-dir .
+# Set up Python environment
+WORKDIR /usr/src/app
+
+# Copy Python package files
+COPY ../wyoming_whisper_openai_client ./wyoming_whisper_openai_client
+COPY ../pyproject.toml ../poetry.lock ../README.md ./
+
+# Install dependencies
+RUN \
+    apk add --no-cache \
+        python3 \
+        py3-pip \
+    && pip3 install --no-cache-dir poetry \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-dev \
+    && apk del py3-pip
+
+# Make scripts executable
+RUN chmod a+x /etc/services.d/whisper/*
 
 # Labels
 LABEL \
     io.hass.name="OpenAI Whisper STT" \
     io.hass.description="OpenAI Whisper Speech-to-Text service" \
     io.hass.type="addon" \
-    io.hass.version=${BUILD_VERSION} \
-    io.hass.arch=${BUILD_ARCH}
+    io.hass.version=${BUILD_VERSION}
+
+# Entrypoint is handled by S6 overlay
