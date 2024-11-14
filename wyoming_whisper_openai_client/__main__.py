@@ -61,7 +61,6 @@ async def main() -> None:
                 version=__version__,
                 models=[
                     AsrModel(
-                        model_id="whisper-1",
                         name="Whisper",
                         description="OpenAI Whisper API",
                         attribution=Attribution(
