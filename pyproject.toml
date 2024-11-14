@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wyoming-whisper-openai-client"
-version = "0.1.0"
+version = "1.0.0"
 description = "Wyoming protocol server for OpenAI Whisper API"
 authors = ["Stefan Kirsch <contact@stefankirsch.com>"]
 license = "MIT"
@@ -12,14 +12,14 @@ packages = [{include = "wyoming_whisper_openai_client"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 wyoming = "^1.5.3"
-httpx = "^0.26.0"
+httpx = "^0.27.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.1.1"
 isort = "^5.13.2"
 flake8 = "^7.0.0"
 pytest = "^8.0.0"
-pytest-asyncio = "^0.23.3"
+pytest-asyncio = "^0.24.0"
 
 [build-system]
 requires = ["poetry-core"]
