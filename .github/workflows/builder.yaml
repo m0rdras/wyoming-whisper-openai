@@ -37,8 +37,7 @@ jobs:
         uses: home-assistant/builder@master
         with:
           args: |
-            --amd64 \
-            --aarch64 \
+            --all \
             --target addon \
             --docker-hub ghcr.io/m0rdras \
             --image wyoming-whisper-openai-addon \
