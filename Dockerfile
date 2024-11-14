@@ -2,7 +2,8 @@
 FROM python:3.13-slim as builder
 
 # Install poetry
-RUN pip install poetry
+RUN pip install poetry \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy only the files needed for installation
 WORKDIR /app
