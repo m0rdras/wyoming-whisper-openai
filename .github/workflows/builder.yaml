@@ -22,21 +22,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get changed files
-        id: changed_files
-        uses: jitterbit/get-changed-files@v1
-        if: github.event_name == 'pull_request'
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          platforms: 'arm64,arm'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Add-on
         uses: home-assistant/builder@master
         with:
           args: |
             --all \
-            --target addon \
+            --target /addon \
             --docker-hub ghcr.io/m0rdras \
-            --addon
+            --image wyoming-whisper-openai-addon \
+            --version 1.0.0
