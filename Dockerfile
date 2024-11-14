@@ -1,18 +1,43 @@
-FROM debian:bookworm-slim
+# Build stage
+FROM python:3.11-slim as builder
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends git python3-pip bash \
- && rm -rf /var/lib/apt/lists/*
+# Install poetry
+RUN pip install poetry
 
-RUN git clone https://github.com/ser/wyoming-whisper-api-client
-RUN pip3 install --no-cache-dir --break-system-packages -r wyoming-whisper-api-client/requirements.txt
+# Copy only the files needed for installation
+WORKDIR /app
+COPY pyproject.toml poetry.lock ./
+COPY wyoming_whisper_openai_client ./wyoming_whisper_openai_client
 
-WORKDIR /wyoming-whisper-api-client/
-ADD run.sh ./
+# Build wheel file
+RUN poetry build --format wheel
+
+# Runtime stage
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Create non-root user
+RUN useradd --create-home appuser \
+    && chown -R appuser:appuser /app
+
+# Copy wheel from builder and install it
+COPY --from=builder /app/dist/*.whl ./
+RUN pip install --no-cache-dir *.whl \
+    && rm *.whl
+
+# Copy run script
+COPY run.sh ./
 RUN chmod +x run.sh
 
+# Set environment variables
 ENV OPENAI_API_KEY=""
 ENV WHISPER_LANGUAGE=""
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
 EXPOSE 7891
 
-ENTRYPOINT ["bash", "/wyoming-whisper-api-client/run.sh"]
+ENTRYPOINT ["./run.sh"]
