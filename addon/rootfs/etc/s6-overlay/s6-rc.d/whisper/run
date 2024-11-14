@@ -1,0 +1,19 @@
+#!/command/with-contenv bashio
+# ==============================================================================
+# Start the OpenAI Whisper service
+# ==============================================================================
+
+# Get config values
+export OPENAI_API_KEY="$(bashio::config 'openai_api_key')"
+export WHISPER_LANGUAGE="$(bashio::config 'language')"
+
+bashio::log.info "Starting OpenAI Whisper STT..."
+
+# Run the service
+exec \
+    s6-setuidgid abc \
+        wyoming-whisper-openai \
+            --uri tcp://0.0.0.0:7891 \
+            --debug \
+            --openai-api-key "${OPENAI_API_KEY}" \
+            --language "${WHISPER_LANGUAGE}" 

@@ -1,0 +1,9 @@
+configuration:
+  openai_api_key:
+    name: OpenAI API Key
+    description: Your OpenAI API key for accessing the Whisper service
+  language:
+    name: Language
+    description: The language code for transcription (e.g., en, fr, de)
+network:
+  7891/tcp: Wyoming Protocol port (required) 

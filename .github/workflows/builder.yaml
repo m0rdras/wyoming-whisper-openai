@@ -1,0 +1,26 @@
+name: Builder
+
+env:
+  BUILD_ARGS: "--test"
+  MONITORED_FILES: "addon/Dockerfile addon/build.yaml addon/config.yaml addon/rootfs/"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Add-on
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Add-on
+        uses: home-assistant/builder@master
+        with:
+          args: ${{ env.BUILD_ARGS }} 
