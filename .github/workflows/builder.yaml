@@ -18,6 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare addon files
+        run: |
+          cp -r wyoming_whisper_openai_client addon/
+          cp pyproject.toml poetry.lock README.md addon/
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
