@@ -51,21 +51,22 @@ async def main() -> None:
     wyoming_info = Info(
         asr=[
             AsrProgram(
-                name="whisper-cpp",
-                description="Faster Whisper transcription via its API",
+                name="whisper-openai",
+                description="OpenAI Whisper API Client",
                 attribution=Attribution(
-                    name="Michael Hansen",
-                    url="https://github.com/synesthesiam"
+                    name="OpenAI",
+                    url="https://openai.com/research/whisper"
                 ),
                 installed=True,
                 version=__version__,
                 models=[
                     AsrModel(
-                        name="whisper.cpp",
-                        description="whisper.cpp",
+                        model_id="whisper-1",
+                        name="Whisper",
+                        description="OpenAI Whisper API",
                         attribution=Attribution(
-                            name="rhasspy wyoming faster whisper",
-                            url="https://github.com/rhasspy/wyoming-faster-whisper"
+                            name="OpenAI",
+                            url="https://platform.openai.com/docs/guides/speech-to-text"
                         ),
                         installed=True,
                         languages=WHISPER_LANGUAGES,
