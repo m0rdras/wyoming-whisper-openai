@@ -5,6 +5,8 @@ description = "Wyoming protocol server for OpenAI Whisper API"
 authors = ["Stefan Kirsch <contact@stefankirsch.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/m0rdras/wyoming-whisper-openai-client"
+keywords = ["wyoming", "whisper", "openai", "stt", "speech-to-text"]
 packages = [{include = "wyoming_whisper_openai_client"}]
 
 [tool.poetry.dependencies]

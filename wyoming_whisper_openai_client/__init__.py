@@ -1,4 +1,11 @@
-"""Wyoming server for whisper API client."""
+"""
+Wyoming server for OpenAI Whisper API client.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the MIT License.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+"""
 from pathlib import Path
 
 _DIR = Path(__file__).parent

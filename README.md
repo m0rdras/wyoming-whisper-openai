@@ -1,46 +1,21 @@
-# Wyoming Whisper API client
+# Wyoming OpenAI Whisper Client
 
-[Wyoming protocol](https://github.com/rhasspy/wyoming) server
-for the Whisper API speech to text system.
+A [Wyoming protocol](https://github.com/rhasspy/wyoming) server implementation for OpenAI's Whisper API speech-to-text service.
 
-My motivation was to establish a one working STT system for whole
-household, additionally to Home Assistant
-I use it for [Blurt](https://github.com/QuantiusBenignus/blurt#network-transcription)
-gnome shell extension.
+## Disclaimer
 
-You need a running Whisper compatible API service, for example Whisper.cpp instance:
+This software is provided "as is", without warranty of any kind, express or implied. Use at your own risk.
 
-https://github.com/ggerganov/whisper.cpp/tree/master/examples/server
+## License
 
-I run it on nvidia GPU with fantastic results with detailed inference on large model in usually about a second:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```sh
-whisper.cpp/server -m whisper.cpp/models/ggml-large-v3-q5_0.bin --host 0.0.0.0 --port 8910 --print-realtime --print-progress
-```
+## Acknowledgments
 
-You need to study whisper.cpp to get more information about running its STT service.
+This project builds upon:
+- [Wyoming Protocol](https://github.com/rhasspy/wyoming) by Michael Hansen
+- [OpenAI Whisper](https://github.com/openai/whisper)
+- [Wyoming Whisper API Client](https://github.com/ser/wyoming-whisper-api-client) by Serge Victor
 
-## Local Install
+See [NOTICE](NOTICE) file for detailed third-party attributions.
 
-Clone the repository and set up Python virtual environment:
-
-```sh
-git clone https://github.com/ser/wyoming-whisper-api-client
-cd wyoming-whisper-api-client
-script/setup
-```
-
-Run a server anyone can connect to:
-
-```sh
-./script/run --uri tcp://0.0.0.0:7891 --debug --api http://192.168.41.49:8910/inference
-```
-
-# Acknowledgements
-
-1. It's a rewrite of Michael Hansen's wyoming-faster-whisper.
-2. Tests are not functioning as there is no public Whisper API service to test it out.
-
-# Support
-
-Matrix: `#wyoming-whisper-api-client:sergevictor.eu`
