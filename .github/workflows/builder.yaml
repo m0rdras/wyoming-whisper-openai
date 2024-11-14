@@ -1,13 +1,15 @@
 name: Builder
 
 env:
-  BUILD_ARGS: "--test"
+  BUILD_ARGS: "--all"
   MONITORED_FILES: "addon/Dockerfile addon/build.yaml addon/config.yaml addon/rootfs/"
 
 on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
   pull_request:
     branches:
       - main
@@ -20,7 +22,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get changed files
+        id: changed_files
+        uses: jitterbit/get-changed-files@v1
+        if: github.event_name == 'pull_request'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: 'arm64,arm'
+
       - name: Build Add-on
         uses: home-assistant/builder@master
         with:
-          args: ${{ env.BUILD_ARGS }} 
+          args: |
+            --all \
+            --target addon \
+            --docker-hub ghcr.io/m0rdras \
+            --addon
