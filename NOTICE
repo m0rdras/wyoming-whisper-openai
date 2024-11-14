@@ -1,0 +1,16 @@
+This project includes the following third-party components:
+
+1. Wyoming Protocol
+   - Source: https://github.com/rhasspy/wyoming
+   - License: MIT
+   - Copyright (c) 2023 Michael Hansen
+
+2. OpenAI Whisper
+   - Source: https://github.com/openai/whisper
+   - License: MIT
+   - Copyright (c) 2022 OpenAI
+
+3. Original Wyoming Whisper API Client
+   - Source: https://github.com/ser/wyoming-whisper-api-client
+   - License: MIT
+   - Copyright (c) 2024 ᎠᎡ. Ѕϵrgϵ Ѵictor 
