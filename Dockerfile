@@ -6,7 +6,7 @@ RUN pip install poetry
 
 # Copy only the files needed for installation
 WORKDIR /app
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock README.md ./
 COPY wyoming_whisper_openai_client ./wyoming_whisper_openai_client
 
 # Build wheel file
