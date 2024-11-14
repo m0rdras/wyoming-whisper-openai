@@ -19,11 +19,6 @@ _LOGGER = logging.getLogger(__name__)
 async def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--api",
-        required=True,
-        help="URL of whisper.cpp to use, http:// or https://",
-    )
     parser.add_argument("--uri", required=True, help="unix:// or tcp://")
     parser.add_argument("--debug", action="store_true", help="Log DEBUG messages")
     parser.add_argument(
@@ -34,6 +29,11 @@ async def main() -> None:
         action="version",
         version=__version__,
         help="Print version and exit",
+    )
+    parser.add_argument(
+        "--openai-api-key",
+        required=True,
+        help="OpenAI API key for Whisper transcription"
     )
     args = parser.parse_args()
 

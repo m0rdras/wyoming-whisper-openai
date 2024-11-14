@@ -35,6 +35,9 @@ class WhisperAPIEventHandler(AsyncEventHandler):
             width=2,
             channels=1,
         )
+        # Verify API key is provided
+        if not hasattr(cli_args, 'openai_api_key') or not cli_args.openai_api_key:
+            raise ValueError("OpenAI API key is required")
 
     async def handle_event(self, event: Event) -> bool:
         if AudioChunk.is_type(event.type):
@@ -55,16 +58,24 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
                         wavfile.writeframes(self.audio)
 
-                        files = {
-                            "file": tmpfile.getvalue()
+                        headers = {
+                            "Authorization": f"Bearer {self.cli_args.openai_api_key}"
                         }
-                        params = {
-                            "temperature": "0.0",
-                            "temperature_inc": "0.2",
+                        files = {
+                            "file": ("audio.wav", tmpfile.getvalue(), "audio/wav")
+                        }
+                        data = {
+                            "model": "whisper-1",
                             "response_format": "json"
                         }
-                        r = await client.post(self.cli_args.api, files=files, params=params, timeout=120.0)
-                        #_LOGGER.debug(r.json())
+                        
+                        r = await client.post(
+                            "https://api.openai.com/v1/audio/transcriptions",
+                            headers=headers,
+                            files=files,
+                            data=data,
+                            timeout=120.0
+                        )
                         text = r.json()['text']
 
             _LOGGER.info(text)
