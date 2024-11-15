@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 # Copy Python package files
 COPY pyproject.toml poetry.lock README.md ./
-COPY wyoming_whisper_openai_client ./wyoming_whisper_openai_client
+COPY wyoming_whisper_openai ./wyoming_whisper_openai
 
 # Install dependencies
 RUN \

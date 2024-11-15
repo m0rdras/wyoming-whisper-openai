@@ -2,7 +2,7 @@ name: "OpenAI Whisper STT"
 version: "1.0.0"
 slug: "wyoming-whisper-openai"
 description: "OpenAI Whisper Speech-to-Text service for Home Assistant"
-url: "https://github.com/m0rdras/wyoming-whisper-openai-client"
+url: "https://github.com/m0rdras/wyoming-whisper-openai"
 arch:
   - aarch64
   - amd64
