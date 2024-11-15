@@ -2,7 +2,7 @@
 name = "wyoming-whisper-openai"
 version = "1.0.0"
 description = "Wyoming protocol server for OpenAI Whisper API"
-authors = ["Stefan Kirsch <contact@stefankirsch.com>"]
+authors = ["Stefan Kirsch <432621+m0rdras@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/m0rdras/wyoming-whisper-openai"
