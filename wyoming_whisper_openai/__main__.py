@@ -42,6 +42,11 @@ async def main() -> None:
         choices=WHISPER_LANGUAGES + [""],
         default=""
     )
+    parser.add_argument(
+        "--prompt",
+        help="Initial prompt for Whisper transcription (default: empty)",
+        default=None
+    )
     args = parser.parse_args()
 
     logging.basicConfig(

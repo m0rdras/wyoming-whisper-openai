@@ -1,14 +1,24 @@
 # Build stage
-FROM python:3.13-slim as builder
+FROM python:3.13-slim AS builder
 
 # Install poetry
-RUN pip install poetry \
-    && rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install poetry
 
-# Copy only the files needed for installation
+# Copy dependency files first to leverage cache
 WORKDIR /app
-COPY pyproject.toml poetry.lock README.md ./
+COPY pyproject.toml poetry.lock ./
+
+# Install build dependencies and configure poetry
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/root/.cache/pypoetry \
+    python -m venv /venv && \
+    poetry config virtualenvs.create false && \
+    poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+# Copy source code
 COPY wyoming_whisper_openai ./wyoming_whisper_openai
+COPY README.md ./
 
 # Build wheel file
 RUN poetry build --format wheel
@@ -16,24 +26,38 @@ RUN poetry build --format wheel
 # Runtime stage
 FROM python:3.13-slim
 
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    OPENAI_API_KEY="" \
+    WHISPER_LANGUAGE="" \
+    PROMPT=""
+
+# Create non-root user first to avoid permission issues
+RUN groupadd -r appgroup && \
+    useradd -r -g appgroup -s /sbin/nologin -d /app appuser && \
+    mkdir -p /app && \
+    chown appuser:appgroup /app
+
 WORKDIR /app
 
-# Create non-root user
-RUN useradd --create-home appuser \
-    && chown -R appuser:appuser /app
-
-# Copy wheel from builder and install it
+# Copy wheel and requirements from builder
 COPY --from=builder /app/dist/*.whl ./
-RUN pip install --no-cache-dir *.whl \
-    && rm *.whl
+COPY --from=builder /app/requirements.txt ./
+
+# Install dependencies and cleanup in one layer
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get update && \
+    apt-get install -y --no-install-recommends tini && \
+    pip install -r requirements.txt *.whl && \
+    rm -rf /var/lib/apt/lists/* *.whl requirements.txt && \
+    apt-get clean
 
 # Copy run script
-COPY run.sh ./
+COPY --chown=appuser:appgroup run.sh ./
 RUN chmod +x run.sh
-
-# Set environment variables
-ENV OPENAI_API_KEY=""
-ENV WHISPER_LANGUAGE=""
 
 # Switch to non-root user
 USER appuser
@@ -41,4 +65,5 @@ USER appuser
 # Expose port
 EXPOSE 7891
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["./run.sh"]
