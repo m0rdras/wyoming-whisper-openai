@@ -30,4 +30,3 @@ assist_pipeline:
 host: localhost
 port: 7891
 ```
-

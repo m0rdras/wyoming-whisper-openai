@@ -3,6 +3,8 @@ import argparse
 import httpx
 import logging
 import wave
+import time
+from pathlib import Path
 
 from io import BytesIO
 
@@ -39,6 +41,13 @@ class WhisperAPIEventHandler(AsyncEventHandler):
         if not hasattr(cli_args, 'openai_api_key') or not cli_args.openai_api_key:
             raise ValueError("OpenAI API key is required")
 
+        if hasattr(cli_args, 'debug_audio') and cli_args.debug_audio:
+            self.debug_dir = Path(cli_args.debug_audio)
+            self.debug_dir.mkdir(parents=True, exist_ok=True)
+            _LOGGER.info(f"Debug audio will be saved to {self.debug_dir}")
+        else:
+            self.debug_dir = None
+
     async def handle_event(self, event: Event) -> bool:
         if AudioChunk.is_type(event.type):
             if not self.audio:
@@ -52,11 +61,18 @@ class WhisperAPIEventHandler(AsyncEventHandler):
 
         if AudioStop.is_type(event.type):
             _LOGGER.debug("Audio stopped")
+
             async with httpx.AsyncClient() as client:
                 with BytesIO() as tmpfile:
                     with wave.open(tmpfile, 'wb') as wavfile:
                         wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
                         wavfile.writeframes(self.audio)
+
+                        if self.debug_dir:
+                            timestamp = time.strftime("%Y%m%d-%H%M%S")
+                            file_path = self.debug_dir / f"debug_audio_{timestamp}.wav"
+                            file_path.write_bytes(tmpfile.getvalue())
+                            _LOGGER.info(f"Saved debug audio to {file_path}")
 
                         headers = {
                             "Authorization": f"Bearer {self.cli_args.openai_api_key}"
@@ -70,7 +86,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         }
                         if self.cli_args.language:
                             data["language"] = self.cli_args.language
-                        
+
                         r = await client.post(
                             "https://api.openai.com/v1/audio/transcriptions",
                             headers=headers,

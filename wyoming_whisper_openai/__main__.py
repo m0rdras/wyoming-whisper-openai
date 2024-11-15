@@ -21,6 +21,7 @@ async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--uri", required=True, help="unix:// or tcp://")
     parser.add_argument("--debug", action="store_true", help="Log DEBUG messages")
+    parser.add_argument("--debug-audio", default=None, help="Write audio to debug directory")
     parser.add_argument(
         "--log-format", default=logging.BASIC_FORMAT, help="Format for log messages"
     )
