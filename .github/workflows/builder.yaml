@@ -39,6 +39,6 @@ jobs:
           args: |
             --all \
             --target addon \
-            --docker-hub ghcr.io/m0rdras \
+            --docker-hub ghcr.io/${{ github.repository_owner }} \
             --image wyoming-whisper-openai-addon \
             --version 1.0.0
